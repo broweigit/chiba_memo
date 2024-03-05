@@ -1,0 +1,10 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "live2d_in_progress.moc3",
+		"Textures": [
+			"live2d_in_progress.2048/texture_00.png"
+		],
+		"DisplayInfo": "live2d_in_progress.cdi3.json"
+	}
+}

@@ -6,6 +6,7 @@
     justify-content: center;
     background-color: white;
     color: black; 
+    z-index: 10;
 
     .bg{
         position: fixed;
@@ -27,7 +28,8 @@
 
             a{
                 font-size: 40px;
-
+                text-decoration: none;
+                color: rgb(24, 24, 50);
             }
         }
     }

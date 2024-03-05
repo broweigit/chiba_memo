@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.chat-pannel {
+    z-index: 1;
+    height: $chat-pannel-height;
+    position: sticky;
+    top: calc(100vh - $chat-view-height);
+}
+
+.chat-textbox {
+    padding: 20px;
+    font-size: x-large;
+}

@@ -1,0 +1,8 @@
+@import '../../styles/variables';
+
+.rightpannel{
+    position: sticky;
+    z-index: 1;
+    top: $navbar-height;
+    margin-bottom: $chat-pannel-height + 20px;
+}

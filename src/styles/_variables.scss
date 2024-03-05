@@ -1,0 +1,17 @@
+$primary-color: rgb(24, 24, 50);
+
+// some colors
+// rgb(24, 24, 50), 82539a, af70ac, d890b8, rgb(187, 64, 69)
+// 250087, 400087, 5b0087
+
+$base-font-family: 'DM Sans', sans-serif;
+
+$base-font-size: 16px;
+$large-font-size: 20px;
+
+$navbar-height: 100px;
+$chat-pannel-height: 540px;
+$chat-view-height: 200px;
+$mainpannel-section-height: calc(100vh - $navbar-height);
+$mainpannel-view-height: calc(100vh - $navbar-height - $chat-view-height);
+$chiba-stick-height: 420px;

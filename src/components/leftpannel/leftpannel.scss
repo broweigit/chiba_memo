@@ -1,0 +1,7 @@
+@import '../../styles/variables';
+
+.leftpannel{
+    position: sticky;
+    z-index: 2;
+    top: calc(100vh - $chiba-stick-height);
+}

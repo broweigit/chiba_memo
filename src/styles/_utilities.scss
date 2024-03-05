@@ -1,0 +1,44 @@
+// 示例：定义一个文字居中的工具类
+.u-text-center {
+    text-align: center;
+}
+
+// 示例：使用变量和混合生成间距工具类
+$spacings: (0, 4, 8, 16, 32, 64);
+
+@mixin generate-margin($direction, $size) {
+    .m-#{$direction}-#{$size} {
+        margin-#{$direction}: #{$size}px;
+    }
+}
+
+@each $size in $spacings {
+    @include generate-margin(t, $size); // 上边距
+    @include generate-margin(b, $size); // 下边距
+    // 可以添加更多方向
+}
+
+section {
+    height: $mainpannel-section-height;
+    scroll-snap-align: end;
+}
+
+.bg-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* 圆角 */
+.rounded {
+    border-radius: 20px;
+}
+
+/* 边框 */
+.border {
+    border: 5px solid #ccc;
+}
+
+/* 阴影 */
+.shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}

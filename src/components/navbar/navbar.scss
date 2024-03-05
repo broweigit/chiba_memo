@@ -1,8 +1,10 @@
-.navbar{
-    height: 100px;
+@import '../../styles/variables';
 
-    .warpper{
-        max-width: 1366px;
+.navbar{
+    height: $navbar-height;
+
+    .wrapper{
+        width: calc(100vw - 250px);
         margin: auto;
         display: flex;
         align-items: center;
@@ -10,6 +12,7 @@
         height: 100%;
         span{
             font-weight: bold;
+            font-size: larger;
         }
 
         .social{

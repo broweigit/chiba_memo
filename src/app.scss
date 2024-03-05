@@ -8,11 +8,16 @@ html{
   margin: 0;
   box-sizing: border-box;
   font-family: 'DM Sans', sans-serif;
+  color: azure;
 }
 
 body{
-  background-color: rgb(24, 24, 50);
+  // background-color: rgb(24, 24, 50);
   color: silver;
+
+  background-image: linear-gradient(to bottom, rgba(24, 24, 50, 0.2), rgb(24, 24, 50)), url('./assets/background/bg3.webp');
+  background-size: cover; // 背景图覆盖整个页面
+  background-attachment: fixed; // 背景图固定不动
 }
 
 a {

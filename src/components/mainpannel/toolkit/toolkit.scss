@@ -1,0 +1,46 @@
+@import '../../../styles/variables';
+
+$default-box-size: 50px;
+$toolkit-container-height: calc($mainpannel-view-height * 0.4 - 20px);
+
+@mixin toolkit-container($box-size: $default-box-size) {
+  height: calc($mainpannel-view-height * 0.4 - 20px);
+  margin: 10px;
+  padding: 20px;
+  padding-top: calc(($toolkit-container-height - $box-size) / 2 - 10px);
+  padding-bottom: calc(($toolkit-container-height - $box-size) / 2 - 10px);
+  overflow-y: auto;
+}
+
+@mixin toolkit-item($box-size: $default-box-size) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  width: $box-size;
+  height: $box-size;
+  padding: 5px;
+  box-sizing: border-box;
+
+  svg {
+    max-width: 80%;
+    max-height: 80%;
+  }
+}
+
+.toolkit-container {
+  @include toolkit-container;
+}
+
+.toolkit-item {
+  @include toolkit-item;
+}
+
+.toolkit-container-xxl {
+  @include toolkit-container($default-box-size * 1.8);
+}
+
+.toolkit-item-xxl {
+  @include toolkit-item($default-box-size * 1.8);
+}

@@ -1,0 +1,10 @@
+@mixin text-shadow($x: 1px, $y: 1px, $blur: 2px, $color: #333) {
+    text-shadow: $x $y $blur $color;
+}
+
+@mixin responsive-font-size($size) {
+    font-size: $size;
+    @media (min-width: 768px) {
+        font-size: $size * 1.2;
+    }
+}

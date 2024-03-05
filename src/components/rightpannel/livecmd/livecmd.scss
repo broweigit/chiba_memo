@@ -1,0 +1,6 @@
+@import '../../../styles/variables';
+
+.live-cmd {
+    height: calc($mainpannel-view-height - 20px);
+    margin: 10px;
+}

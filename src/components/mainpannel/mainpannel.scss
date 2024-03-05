@@ -1,0 +1,9 @@
+@import '../../styles/variables';
+
+.cancel-chat-pannel-margin {
+    margin-top: calc($chat-pannel-height * -1);
+}
+
+section{
+    padding-bottom: $chat-view-height;
+}
