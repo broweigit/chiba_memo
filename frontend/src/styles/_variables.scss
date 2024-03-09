@@ -1,4 +1,6 @@
 $primary-color: rgb(24, 24, 50);
+$secodary-color: rgb(42, 32, 88);
+$decorative-color: rgb(187, 64, 69);
 
 // some colors
 // rgb(24, 24, 50), 82539a, af70ac, d890b8, rgb(187, 64, 69)
@@ -10,8 +12,15 @@ $base-font-size: 16px;
 $large-font-size: 20px;
 
 $navbar-height: 100px;
+$sidebar-width: 300px;
 $chat-pannel-height: 540px;
 $chat-view-height: 200px;
-$mainpannel-section-height: calc(100vh - $navbar-height);
-$mainpannel-view-height: calc(100vh - $navbar-height - $chat-view-height);
+$mainpannel-section-height: calc(var(--100vh, 100vh) - $navbar-height);
+$mainpannel-view-height: calc($mainpannel-section-height - $chat-view-height);
 $chiba-stick-height: 420px;
+
+$z-index-primary: 10;
+$z-index-overlay: 8;
+$z-index-ui: 5;
+$z-index-component: 1;
+$z-index-bg: 0;

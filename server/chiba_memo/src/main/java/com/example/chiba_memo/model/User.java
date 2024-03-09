@@ -1,6 +1,6 @@
 package com.example.chiba_memo.model;
 
-public class Users {
+public class User {
     private Long id;
     private String username;
     private String password;
@@ -33,7 +33,7 @@ public class Users {
 
     @Override
     public String toString() {
-        return "Users{" +
+        return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

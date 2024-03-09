@@ -1,6 +1,8 @@
+@import './styles/variables';
+
 html{
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+  height: 100%;
+  overflow: hidden;
 }
 
 *{
@@ -17,7 +19,22 @@ body{
 
   background-image: linear-gradient(to bottom, rgba(24, 24, 50, 0.2), rgb(24, 24, 50)), url('./assets/background/bg3.webp');
   background-size: cover; // 背景图覆盖整个页面
+  background-position: center; /* 保证背景图居中 */
   background-attachment: fixed; // 背景图固定不动
+  
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: none;
+  scrollbar-color: transparent transparent;
+
+  position: fixed;
+}
+
+@media (min-width: 768px) {
+  body {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
 }
 
 a {

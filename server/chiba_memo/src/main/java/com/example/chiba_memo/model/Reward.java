@@ -1,6 +1,6 @@
 package com.example.chiba_memo.model;
 
-public class Rewards {
+public class Reward {
     private Long id;
     private String name;
     private String description;
@@ -51,7 +51,7 @@ public class Rewards {
 
     @Override
     public String toString() {
-        return "Rewards{" +
+        return "Reward{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

@@ -8,6 +8,7 @@ import { ReactComponent as ScheduleIcon } from '../../../assets/svg/schedule.svg
 import { ReactComponent as MemoIcon } from '../../../assets/svg/memo.svg';
 import useBreakpoint from '../../../hooks/screenBreakpoint';
 import { Link } from 'react-router-dom';
+import CustomScrollbar from './CustomScrollbar';
 
 const toolkitItems = [
   { id: 1, icon: <ScheduleIcon />, link: "/schedule", alt: 'Example' },
@@ -31,7 +32,7 @@ const ToolkitItem = ({ icon, link, alt, dist, isxxl }) => (
     <motion.div 
       className={`toolkit-item${isxxl ? "-xxl" : ""} bg-blur rounded border shadow`}
       style={{
-        opacity: 1 - Math.abs(dist),
+        opacity: (1 - Math.abs(dist)),
         scaleX: (1 - Math.abs(dist)) * 1.75,
         scaleY: (1 - Math.abs(dist)) * 1.75,
         translateY: (Math.sin(Math.PI * dist / 2) / -2) * 100
@@ -60,58 +61,48 @@ const Toolkit = () => {
   const { scrollYProgress } = useScroll({container: containerRef});
   const currentBreakpoint = useBreakpoint();
   const [distValues, setDistValues] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
+  const [currRow, setCurrRow] = useState(0)
+
+  const smoothScrollTo = (container, targetPosition, duration = 500) => {
+    const startPosition = container.scrollTop;
+    const distance = targetPosition - startPosition;
+    let startTime = null;
+  
+    // 动画函数
+    const animation = currentTime => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const nextScrollPosition = easeInOutQuad(timeElapsed, startPosition, distance, duration);
+  
+      container.scrollTo(0, nextScrollPosition);
+  
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    };
+  
+    requestAnimationFrame(animation);
+  };
+  
+  // 缓动函数 - 速度先加快后减慢
+  const easeInOutQuad = (t, b, c, d) => {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t + b;
+    t--;
+    return -c / 2 * (t * (t - 2) - 1) + b;
+  };
 
   useEffect(() => {
     const container = containerRef.current;
 
-    let scrollCounter = 0; // 初始化滚动计数器
-    let isCoolingDown = false; // 冷却标志
-
     const colsPerRow = getColsPerRow(currentBreakpoint);
-    const totalRows = Math.ceil(toolkitItems.length / colsPerRow);
-    const maxScrollPosition = container.scrollHeight - container.clientHeight;
-    const sectionHeight = maxScrollPosition / (totalRows - 1); 
 
-    const handleWheel = (e) => {
-      e.preventDefault(); // 阻止默认的滚动行为
-  
-      if (!isCoolingDown) {
-        // 根据鼠标滚轮的方向更新计数器
-        if (e.deltaY > 0) {
-          scrollCounter += 1; // 向下滚动
-        } else if (e.deltaY < 0) {
-          scrollCounter -= 1; // 向上滚动
-        }
-
-        isCoolingDown = true;
+    const currTotalRows = Math.ceil(toolkitItems.length / colsPerRow);
+    setTotalRows(currTotalRows);
     
-        // 计算新的滚动位置
-        const scrollToPosition = scrollCounter * sectionHeight;
-        // 控制容器滚动到新的位置
-        container.scrollTo({
-          top: scrollToPosition,
-          behavior: 'smooth'
-        });
-
-        setTimeout(() => {
-          isCoolingDown = false;
-        }, 150);
-      }
-    };
-
-    container.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-    };
-  }, [currentBreakpoint]);
-
-  useEffect(() => {
     // 定义更新逻辑为一个可以重用的函数
     const updateDistValues = (scrollValue) => {
-      const colsPerRow = getColsPerRow(currentBreakpoint);
-      const totalRows = Math.ceil(toolkitItems.length / colsPerRow);
       const newDistValues = toolkitItems.map((item, index) => {
+        const totalRows = currTotalRows;
         const rowNumber = Math.floor(index / colsPerRow);
         const rowMargin = 1 / (totalRows - 1);
         const rowPosition = rowNumber * rowMargin;
@@ -127,22 +118,72 @@ const Toolkit = () => {
   
     // 断点变化时手动更新一次状态
     updateDistValues(scrollYProgress.get());
+
+    // 滚动条监听函数重设
+    let isCoolingDown = false; // 冷却标志
+
+    const maxScrollPosition = container.scrollHeight - container.clientHeight;
+    const sectionHeight = maxScrollPosition / (currTotalRows - 1); 
+
+    const handleWheel = (e) => {
+      e.preventDefault(); // 阻止默认的滚动行为
   
+      if (!isCoolingDown) {
+        // 根据鼠标滚轮的方向更新计数器
+        if (e.deltaY > 0) {
+          setCurrRow(Math.min(Math.max((currRow + 1), 0), currTotalRows - 1));
+        } else if (e.deltaY < 0) {
+          setCurrRow(Math.min(Math.max((currRow - 1), 0), currTotalRows - 1));
+        }
+
+        isCoolingDown = true;
+
+        setTimeout(() => {
+          isCoolingDown = false;
+        }, 150);
+      }
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    // 更新一次scroll位置
+    const scrollToPosition = currRow * sectionHeight;
+    smoothScrollTo(container, scrollToPosition, 500);
+
     return () => {
       unsubscribeScrollY();
+      container.removeEventListener('wheel', handleWheel);
     };
-  }, [currentBreakpoint]);
+  }, [currentBreakpoint, currRow]);
 
+  // 当外部调整currRows时
+  useEffect(() => {
+    const container = containerRef.current;
+
+    const maxScrollPosition = container.scrollHeight - container.clientHeight;
+    const sectionHeight = maxScrollPosition / (totalRows - 1);
+
+    const scrollToPosition = currRow * sectionHeight;
+    smoothScrollTo(container, scrollToPosition, 500);
+
+  }, [currRow]);
 
   return (
-    <div className={`toolkit-container${currentBreakpoint === "xxl" ? "-xxl" : ""}`} ref={containerRef}>
-      <Row>
-        {toolkitItems.map((item, index) => (
-          <Col xs={6} md={4} lg={4} xl={3} xxl={3} key={item.id} className="d-flex justify-content-center align-items-center p-2">
-            <ToolkitItem {...item} dist={distValues[index]} isxxl={currentBreakpoint === 'xxl'}/>
-          </Col>
-        ))}
-      </Row>
+    <div style={{display: 'flex'}}>
+      <div className={`toolkit-container${currentBreakpoint === "xxl" ? "-xxl" : ""}`} ref={containerRef}>
+        <Row>
+          {toolkitItems.map((item, index) => (
+            <Col xs={6} md={4} lg={4} xl={3} xxl={3} key={item.id} className="d-flex justify-content-center align-items-center p-2">
+              {typeof distValues[index] !== 'undefined' && <ToolkitItem {...item} dist={distValues[index]} isxxl={currentBreakpoint === 'xxl'}/>}
+            </Col>
+          ))}
+        </Row>
+      </div>
+      <CustomScrollbar 
+        totalRows={totalRows} 
+        onCircleClick={(rowIndex)=>{setCurrRow(rowIndex)}} 
+        currentRow={currRow}
+      />
     </div>
   );
 }

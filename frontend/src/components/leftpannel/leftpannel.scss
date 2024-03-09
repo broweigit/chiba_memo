@@ -2,6 +2,6 @@
 
 .leftpannel{
     position: sticky;
-    z-index: 2;
-    top: calc(100vh - $chiba-stick-height);
+    z-index: $z-index-primary;
+    top: calc(var(--100vh, 100vh) - $chiba-stick-height);
 }

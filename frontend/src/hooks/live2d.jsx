@@ -9,6 +9,7 @@ import {
 window.PIXI = PIXI;
 
 export async function init() {
+
   // 引入模型
   // const model = await Live2DModel.from('https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json', { motionPreload: MotionPreloadStrategy.NONE,  })
   const model = await Live2DModel.from('live2d/placeholder/live2d_in_progress.model3.json', { motionPreload: MotionPreloadStrategy.NONE,  })

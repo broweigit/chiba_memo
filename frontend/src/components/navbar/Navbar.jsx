@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import Sidebar from "../sidebar/Sidebar"
 import "./navbar.scss"
 import { motion } from "framer-motion"
+import LoginModal from "../login/LoginModal";
 
 function formatTitle(pathname) {
   if (pathname === "/") {
@@ -29,6 +30,7 @@ const Navbar = () => {
         >
           {title}
         </motion.span>
+        <LoginModal/>
         <div className="social">
           <a href="#"><img src="/bilibili_com.png" alt="" /></a>
           <a href="#"><img src="/youtube.png" alt="" /></a>

@@ -1,18 +1,26 @@
+package com.example.chiba_memo.controller;
+
+import com.example.chiba_memo.model.User;
 import com.example.chiba_memo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AuthController(UserMapper userMapper) {
+    public AuthController(UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userMapper = userMapper;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @PostMapping("/register")
@@ -21,8 +29,7 @@ public class AuthController {
         if (existingUser != null) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
-        // 对密码进行加密处理，例如使用BCrypt
-        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userMapper.insert(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -30,10 +37,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         User foundUser = userMapper.findByUsername(user.getUsername());
-        if (foundUser == null || !BCrypt.checkpw(user.getPassword(), foundUser.getPassword())) {
+        if (foundUser == null || !bCryptPasswordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
             return new ResponseEntity<>("Invalid username or password!", HttpStatus.UNAUTHORIZED);
         }
-        // 实现Session管理，生成Token等
+        // Handle session management or generate a token here
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,0 +1,106 @@
+@import '../../styles/variables';
+
+$first-circle-radius: calc(var(--100vh, 100vh) - $navbar-height - 20px);
+$first-circle-x: 0vh;
+$first-circle-y: var(--100vh, 100vh);
+$form-x: 20vw;
+$form-y: calc($first-circle-radius * 0.4);
+
+$first-circle-x-xs: 50vw;
+$first-circle-radius-xs: $first-circle-radius;
+$form-x-xs: calc(0vw - calc($first-circle-radius * 0.2));
+$form-y-xs: calc($first-circle-radius * 0.2);
+
+.login-button {
+  cursor: pointer;
+  background-color: $secodary-color;
+  border: none;
+
+  padding: 10px;
+  margin: 10px;
+
+  &:hover {
+    background-color: darken(#007bff, 5%);
+  }
+}
+
+@mixin loginModalWrapper($first-circle-x: $first-circle-x, $first-circle-radius: $first-circle-radius, $form-x: $form-x, $form-y: $form-y) {
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: var(--100vh, 100vh);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: $z-index-overlay;
+
+    .circle-bg {
+      position: absolute;
+      top: calc($first-circle-y - $first-circle-radius);
+      left: calc($first-circle-x - $first-circle-radius);
+      width: calc($first-circle-radius * 2);
+      height: calc($first-circle-radius * 2);
+      border-radius: 50%;
+      background-color: #fff;
+      z-index: $z-index-overlay;
+    }
+
+    form {
+      position: absolute;
+      left: calc($first-circle-radius + $form-x);
+      top: $form-y;
+      width: calc($first-circle-radius * 0.4);
+      padding: 10px;
+
+      z-index: $z-index-overlay + 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px; // 添加间隙
+      align-items: center;
+      justify-content: center;
+    }
+
+    input, button {
+      width: 80%; // 控制宽度
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      color: $primary-color;
+    }
+
+    h2 {
+      width: 80%; // 控制宽度
+      text-align: center;
+      color: $primary-color;
+    }
+
+    button {
+      cursor: pointer;
+      background-color: $secodary-color;
+      color: white;
+      border: none;
+
+      &:hover {
+        background-color: darken(#007bff, 5%);
+      }
+    }
+
+    .button-cancel {
+      background-color: $decorative-color;
+    }
+  }
+}
+
+// 应用基本样式
+.login-modal-wrapper {
+  @include loginModalWrapper($first-circle-x, $first-circle-radius, $form-x, $form-y);
+}
+
+// 针对xs屏幕调整
+@media (max-width: 576px) {
+  .login-modal-wrapper {
+    @include loginModalWrapper($first-circle-x-xs, $first-circle-radius-xs, $form-x-xs, $form-y-xs);
+  }
+}

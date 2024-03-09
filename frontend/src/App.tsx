@@ -6,6 +6,15 @@ import Home from "./pages/Home";
 import Schedule from "./pages/Schedule";
 
 const App = () => {
+
+  function adjustHeight() {
+    var vh = window.innerHeight;
+    document.documentElement.style.setProperty('--100vh', `${vh}px`);
+  }
+  
+  adjustHeight();
+  window.addEventListener('resize', adjustHeight);
+  
   return (
     <Router>
       <div>

@@ -10,6 +10,7 @@
     "@types/node": "^16.18.76",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
     "framer-motion": "^11.0.3",
     "pixi-live2d-display": "^0.4.0",
@@ -25,7 +26,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+
+    "prebuild": "shx rm -rf ../server/chiba_memo/src/main/resources/static/*",
     "build": "react-scripts build",
+    "postbuild": "shx cp -R build/* ../server/chiba_memo/src/main/resources/static/",
+
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
