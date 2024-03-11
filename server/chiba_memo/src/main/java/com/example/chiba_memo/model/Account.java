@@ -1,9 +1,15 @@
 package com.example.chiba_memo.model;
 
-public class User {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Account {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private String username;
     private String password;
+
+    private List<String> roles;
 
     // Getters and Setters
 
@@ -27,16 +33,24 @@ public class User {
         return password;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+        return "Account{" +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

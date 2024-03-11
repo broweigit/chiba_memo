@@ -24,6 +24,38 @@ $form-y-xs: calc($first-circle-radius * 0.2);
   }
 }
 
+.user-span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  span {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: $primary-word-color;
+    margin-top: $navbar-height * 0.15;
+  }
+
+  p {
+    font-size: 0.9rem; 
+    color: $secondary-word-color;
+  }
+  
+  .user-icon {
+    border-radius: 50%;
+    max-width: $navbar-height * 0.6;
+    max-height: $navbar-height * 0.6;
+  }
+}
+
+
 @mixin loginModalWrapper($first-circle-x: $first-circle-x, $first-circle-radius: $first-circle-radius, $form-x: $form-x, $form-y: $form-y) {
   .overlay {
     position: absolute;

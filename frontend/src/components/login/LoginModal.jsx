@@ -2,17 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './loginmodal.scss';
 import { login, register } from '../../services/LoginService';
+import { useLogin, useLoginOpen, useUserInfo } from '../../context/LoginProvider';
+import axios from 'axios';
+import { getCurrentUser } from '../../services/UserService';
+
+import UserIcon from '../../assets/svg/userIcon.svg';
 
 const LoginModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isLoginOpen, setIsLoginOpen } = useLoginOpen();
+  const { isUserLogin, setIsUserLogin } = useLogin();
   const [username, setUsername] = useState('');
+  const { userInfo, setUserInfo } = useUserInfo();
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true); // 新增状态变量，true为登录状态，false为注册状态
   const [statusMessage, setStatusMessage] = useState('');
   const [messageColor, setMessageColor] = useState('black');
 
   const toggleOpen = () => {
-    setIsOpen(!isOpen);
+    setIsLoginOpen(!isLoginOpen);
     setIsLogin(true);
     setStatusMessage('');
     setMessageColor('black');
@@ -20,7 +27,7 @@ const LoginModal = () => {
 
   // 禁用滚动
   useEffect(() => {
-    if (isOpen) {
+    if (isLoginOpen) {
       document.body.classList.add('no-scroll');
     } else {
       document.body.classList.remove('no-scroll');
@@ -29,7 +36,7 @@ const LoginModal = () => {
     return () => {
       document.body.classList.remove('no-scroll');
     };
-  }, [isOpen]);
+  }, [isLoginOpen]);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -66,9 +73,18 @@ const LoginModal = () => {
     setStatusMessage('');
     try {
       let responseMessage;
+
       if (isLogin) {
         const response = await login(username, password);
         responseMessage = 'Login Success'; // 假设响应中有一个message字段
+        // login后动作
+        const currUsername = await getCurrentUser();
+        if (currUsername) {
+          axios.defaults.withCredentials = true;
+          setIsUserLogin(true);
+          setUserInfo(currUsername);
+        }
+        
       } else {
         const response = await register(username, password);
         responseMessage = 'Registration Success'; // 假设响应中有一个message字段
@@ -78,16 +94,32 @@ const LoginModal = () => {
       setMessageColor('green');
 
       setTimeout(() => {
-        setIsOpen(false); // 登录或注册成功后关闭模态框
+        if (isLogin) {
+          setIsLoginOpen(false); // 登录成功后关闭模态框
+        }
+        else {
+          setIsLogin(true);
+          setStatusMessage('');
+          setMessageColor('black');
+        }
       }, 2000);
 
     } catch (error) {
+      console.log(error.response.data)
       setStatusMessage(error.response.data || 'An unexpected error occurred');
       setMessageColor('red');
     }
   };
 
-  const handleCancel = () => setIsOpen(false);
+  const handleLogout = () => {
+    // 更新状态
+    setIsUserLogin(false);
+    setUserInfo('');
+    // 停止携带cookies
+    axios.defaults.withCredentials = false;
+  };
+
+  const handleCancel = () => setIsLoginOpen(false);
 
   // 圆形背景动画变体
   const circleVariants = {
@@ -114,18 +146,34 @@ const LoginModal = () => {
 
   return (
     <div className="login-modal-wrapper">
-      <button className="login-button rounded" onClick={toggleOpen}>{'Login/Register'}</button>
+      {!isUserLogin ? (
+          <button className="login-button rounded" onClick={toggleOpen}>{'Login/Register'}</button>
+        ): 
+        (
+          <div className='user-span'>
+            <img className="user-icon" src={UserIcon} alt="User Avatar" />
+            <span>
+              <h3>{userInfo}</h3>
+              <p>UserEmail@example.com</p> {/* 邮箱信息同样应从状态管理中获取 */}
+            </span>
+            <button className="login-button rounded" onClick={handleLogout}>Logout</button>
+          </div>
+        )
+      }
+      
       <AnimatePresence>
-        {isOpen && (
+        {isLoginOpen && (
           <motion.div className="overlay bg-blur"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => {setIsLoginOpen(false)}}
           >
             <motion.div className="circle-bg"
               initial="hidden"
               animate="visible"
               variants={circleVariants}
+              onClick={(e) => e.stopPropagation()}
             >
               <motion.form
                 variants={itemVariants}

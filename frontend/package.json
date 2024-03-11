@@ -15,6 +15,7 @@
     "framer-motion": "^11.0.3",
     "pixi-live2d-display": "^0.4.0",
     "pixi.js": "^6.5.2",
+    "qs": "^6.12.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-dom": "^18.2.0",
@@ -25,14 +26,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-
+    "start": "react-app-rewired start",
     "prebuild": "shx rm -rf ../server/chiba_memo/src/main/resources/static/*",
-    "build": "react-scripts build",
+    "build": "react-app-rewired build",
     "postbuild": "shx cp -R build/* ../server/chiba_memo/src/main/resources/static/",
-
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [
@@ -51,5 +50,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1",
+    "webpack-bundle-analyzer": "^4.10.1"
   }
 }
