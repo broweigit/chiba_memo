@@ -78,9 +78,10 @@ const LoginModal = () => {
         const response = await login(username, password);
         responseMessage = 'Login Success'; // 假设响应中有一个message字段
         // login后动作
+        
+        axios.defaults.withCredentials = true;
         const currUsername = await getCurrentUser();
         if (currUsername) {
-          axios.defaults.withCredentials = true;
           setIsUserLogin(true);
           setUserInfo(currUsername);
         }

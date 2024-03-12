@@ -1,4 +1,3 @@
-import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import Chatpannel from '../components/chatpannel/Chatpannel'
 import Leftpannel from '../components/leftpannel/Leftpannel'

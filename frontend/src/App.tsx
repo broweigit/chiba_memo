@@ -1,15 +1,15 @@
 import "./app.scss"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "./components/navbar/Navbar";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { LoginProvider } from "./context/LoginProvider";
 
 import Home from "./pages/Home";
 import Schedule from "./pages/Schedule";
-import { CanvasProvider, useCanvasState } from "./context/CanvasProvider";
-import { useEffect } from "react";
+import { CanvasProvider} from "./context/CanvasProvider";
 import Live2dCanvas from "./components/live2d/Live2dCanvas";
+import Requires from "./components/utils/Requires";
 
 
 const App = () => {
@@ -29,8 +29,8 @@ const App = () => {
         <CanvasProvider>
           <Navbar/>
           <Routes>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/schedule" element={<Schedule/>}/>
+            <Route path="/" element={<Requires><Home/></Requires>}/>
+            <Route path="/schedule" element={<Requires><Schedule/></Requires>}/>
             <Route path="/memo" element={<></>}/>
           </Routes>
           <Live2dCanvas/>

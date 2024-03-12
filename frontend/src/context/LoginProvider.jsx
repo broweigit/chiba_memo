@@ -20,9 +20,6 @@ export const LoginProvider = ({ children }) => {
   const navigate = useNavigate();
   useEffect(() => {
 
-    // 携带Cookies
-    axios.defaults.withCredentials = true;
-
     const tryCurrentUser = async () => {
       const currUsername = await getCurrentUser();
       if (currUsername) {

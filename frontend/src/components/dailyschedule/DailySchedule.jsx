@@ -3,7 +3,7 @@ import './dailyschedule.scss'
 
 const DailySchedule = () => {
   return (
-    <section>DailySchedule</section>
+    <section id='canvas-portal-schedule'>DailySchedule</section>
   )
 }
 

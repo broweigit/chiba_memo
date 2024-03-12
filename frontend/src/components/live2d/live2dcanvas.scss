@@ -1,18 +1,17 @@
 @import '../../styles/variables';
 
-#canvas_view {
-    position: fixed;
-    pointer-events: none;
-    top: 0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
-    z-index: $z-index-primary;
-}
+// #canvas_view {
+//     position: fixed;
+//     pointer-events: none;
+//     top: 0px;
+//     left: 0px;
+//     width: 100vw;
+//     height: 100vh;
+//     z-index: $z-index-primary;
+// }
 
-.home-pannel {
-    position: sticky;
-    z-index: $z-index-primary;
-    top: calc(var(--100vh, 100vh) - $chiba-stick-height);
-    height: 512px;
-}
+// .home-pannel {
+//     position: sticky;
+//     z-index: $z-index-primary;
+//     top: calc(var(--100vh, 100vh) - $chiba-stick-height);
+// }

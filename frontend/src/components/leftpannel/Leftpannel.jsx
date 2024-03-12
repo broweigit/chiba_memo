@@ -3,6 +3,7 @@ import { useCanvas, useCanvasState } from "../../context/CanvasProvider";
 import "./leftpannel.scss"
 import { Col } from 'react-bootstrap';
 import Live2dPannel from "../live2d/Live2dPannel";
+import Live2dCanvas from "../live2d/Live2dCanvas";
 
 const Leftpannel = () => {
 
@@ -35,7 +36,8 @@ const Leftpannel = () => {
 
   return (
     <Col xs={0} sm={6} md={4} lg={3} xl={3} className="d-sm-block d-none">
-      <Live2dPannel pannelName={"home-pannel"}/>
+      {/* <Live2dPannel pannelName={"leftpannel"}/> */}
+      <div className="leftpannel" id="canvas-portal"></div>
     </Col>
   )
 }
