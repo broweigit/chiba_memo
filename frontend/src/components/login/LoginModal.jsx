@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './loginmodal.scss';
-import { login, register } from '../../services/LoginService';
+import { login, logout, register } from '../../services/LoginService';
 import { useLogin, useLoginOpen, useUserInfo } from '../../context/LoginProvider';
 import axios from 'axios';
 import { getCurrentUser } from '../../services/UserService';
 
 import UserIcon from '../../assets/svg/userIcon.svg';
+import MyCheckbox from './checkbox/MyCheckbox';
 
 const LoginModal = () => {
   const { isLoginOpen, setIsLoginOpen } = useLoginOpen();
@@ -17,20 +18,28 @@ const LoginModal = () => {
   const [isLogin, setIsLogin] = useState(true); // 新增状态变量，true为登录状态，false为注册状态
   const [statusMessage, setStatusMessage] = useState('');
   const [messageColor, setMessageColor] = useState('black');
+  const [isRemember, setIsRemember] = useState(true);
 
   const toggleOpen = () => {
     setIsLoginOpen(!isLoginOpen);
-    setIsLogin(true);
-    setStatusMessage('');
-    setMessageColor('black');
   }
 
-  // 禁用滚动
   useEffect(() => {
+    // 禁用滚动
     if (isLoginOpen) {
       document.body.classList.add('no-scroll');
     } else {
       document.body.classList.remove('no-scroll');
+    }
+
+    // 开启时初始化到Login
+    if (isLoginOpen) {
+      setIsLogin(true);
+      setStatusMessage('');
+      setMessageColor('black');
+      // 且清空当前用户登录信息
+      setUserInfo('');
+      setIsUserLogin(false);
     }
 
     return () => {
@@ -73,13 +82,17 @@ const LoginModal = () => {
     setStatusMessage('');
     try {
       let responseMessage;
+      // 预判断
+      if (username === '' || password === '') {
+        setStatusMessage('Username or password shall not be empty desu...');
+        setMessageColor('red');
+        return;
+      } 
 
       if (isLogin) {
-        const response = await login(username, password);
+        await login(username, password, isRemember);
         responseMessage = 'Login Success'; // 假设响应中有一个message字段
         // login后动作
-        
-        axios.defaults.withCredentials = true;
         const currUsername = await getCurrentUser();
         if (currUsername) {
           setIsUserLogin(true);
@@ -87,7 +100,7 @@ const LoginModal = () => {
         }
         
       } else {
-        const response = await register(username, password);
+        await register(username, password);
         responseMessage = 'Registration Success'; // 假设响应中有一个message字段
       }
       
@@ -112,15 +125,21 @@ const LoginModal = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async (e) => {
     // 更新状态
-    setIsUserLogin(false);
-    setUserInfo('');
-    // 停止携带cookies
-    axios.defaults.withCredentials = false;
+    try {
+      await logout();
+      setIsUserLogin(false);
+      setUserInfo('');
+    }
+    catch (error) {
+      console.log(error.response.data)
+    }
   };
 
-  const handleCancel = () => setIsLoginOpen(false);
+  const handleCancel = () => {
+    setIsLoginOpen(false);
+  }
 
   // 圆形背景动画变体
   const circleVariants = {
@@ -139,10 +158,20 @@ const LoginModal = () => {
     }
   };
 
+  const formVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    },
+  }
+
   // 表单项动画变体
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
@@ -177,7 +206,7 @@ const LoginModal = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <motion.form
-                variants={itemVariants}
+                variants={formVariants}
                 onSubmit={handleSubmit}
               >
                 <motion.h2 variants={textVariants} initial="initial" animate="in" exit="exit">{isLogin ? 'Login' : 'Register'}</motion.h2>
@@ -188,8 +217,13 @@ const LoginModal = () => {
                 )}
                 <motion.input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} variants={itemVariants}/>
                 <motion.input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} variants={itemVariants}/>
+                {isLogin && (
+                  <motion.div variants={itemVariants}>
+                    <MyCheckbox label="remember me" isChecked={isRemember} setIsChecked={setIsRemember}/>
+                  </motion.div>
+                )}
                 <motion.button type="submit" variants={itemVariants}>{isLogin ? 'Login' : 'Register'}</motion.button>
-                <motion.button type="button" onClick={toggleForm}>{isLogin ? 'To Register >>' : 'To Login >>'}</motion.button>
+                <motion.button type="button" variants={itemVariants} onClick={toggleForm}>{isLogin ? 'To Register >>' : 'To Login >>'}</motion.button>
                 <motion.button className='button-cancel' type="button" onClick={handleCancel} variants={itemVariants}>Cancel</motion.button>
               </motion.form>
             </motion.div>

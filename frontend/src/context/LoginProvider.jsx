@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../services/UserService';
 
 const LoginOpenContext = createContext();
@@ -18,20 +18,20 @@ export const LoginProvider = ({ children }) => {
 
   // AxiosInterceptor Hook
   const navigate = useNavigate();
-  useEffect(() => {
+  const location = useLocation();
+  
 
-    const tryCurrentUser = async () => {
-      const currUsername = await getCurrentUser();
-      if (currUsername) {
-        axios.defaults.withCredentials = true;
-        setIsUserLogin(true);
-        setUserInfo(currUsername);
-      } else {
-        axios.defaults.withCredentials = false;
-      }
+  const tryCurrentUser = async () => {
+    const currUsername = await getCurrentUser();
+    if (currUsername) {
+      setIsUserLogin(true);
+      setUserInfo(currUsername);
+    } else {
     }
+  }
 
-    tryCurrentUser();
+  useEffect(() => { 
+    axios.defaults.withCredentials = true;
     
     const interceptor = axios.interceptors.response.use(
       response => response,
@@ -40,15 +40,24 @@ export const LoginProvider = ({ children }) => {
           navigate('/');
           setIsLoginOpen(true);
         }
-        // 对于非401的错误，仍然返回一个拒绝的Promise
+        else if (!error.response) {
+          // 如果没有响应体，可能是网络错误，回到上一页
+          navigate(-1);
+        }
         return Promise.reject(error);
       }
     );
+
+    
+    tryCurrentUser();
   
     return () => {
       axios.interceptors.response.eject(interceptor);
     };
-  }, [navigate]);  
+  }, []);
+
+  // useEffect(() => {
+  // }, [navigate]);  
 
   return (
     <LoginOpenContext.Provider value={{ isLoginOpen, setIsLoginOpen }}>

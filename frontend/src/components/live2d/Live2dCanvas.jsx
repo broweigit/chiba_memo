@@ -11,7 +11,8 @@ const Live2dCanvas = () => {
   
   return (
     <div id='canvas-home'>
-      <canvas id="canvas_view" ref={canvasRef}></canvas>
+      <canvas id="canvas_view" ref={canvasRef}>
+      </canvas>
     </div>
   )
 }

@@ -1,0 +1,52 @@
+@import '../../../styles/variables';
+
+.checklabel-container {
+  color: $primary-color;
+}
+
+// 复选框容器样式
+.checkbox-container {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 24px;
+  
+    // 自定义复选框样式
+    .checkbox {
+      opacity: 0;
+      position: absolute;
+    }
+  
+    // 自定义勾选标识（初始状态隐藏）
+    .checkmark {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: transparent;
+      transition: background-color 0.2s, transform 0.2s;
+  
+      svg {
+        transform: scale(0);
+        transition: transform 0.2s;
+      }
+    }
+  
+    // 当复选框被勾选时
+    input:checked + .checkmark {
+      background-color: $submit-color; // 绿色背景
+      border-color: $submit-color;
+      
+      svg {
+        transform: scale(1); // 显示SVG图标
+      }
+    }
+  }
+  
+  // 标签样式
+  label {
+    margin-left: 8px;
+  }
+  

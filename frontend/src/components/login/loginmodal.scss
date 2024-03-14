@@ -102,6 +102,18 @@ $form-y-xs: calc($first-circle-radius * 0.2);
       color: $primary-color;
     }
 
+    // 新增对checkbox的样式定义
+    input[type="checkbox"] {
+      width: auto; // 复选框恢复默认宽度
+      margin: 10px; // 留出一些外边距
+      cursor: pointer; // 鼠标悬停时显示指针
+    }
+
+    label {
+      color: $primary-color; // 保持与输入框文字颜色一致
+      cursor: pointer; // 使标签也能点击
+    }
+
     h2 {
       width: 80%; // 控制宽度
       text-align: center;

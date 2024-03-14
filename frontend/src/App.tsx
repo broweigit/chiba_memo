@@ -10,6 +10,7 @@ import Schedule from "./pages/Schedule";
 import { CanvasProvider} from "./context/CanvasProvider";
 import Live2dCanvas from "./components/live2d/Live2dCanvas";
 import Requires from "./components/utils/Requires";
+import { PopoutProvider } from "./context/PopoutProvider";
 
 
 const App = () => {
@@ -27,13 +28,15 @@ const App = () => {
     <Router>
       <LoginProvider>
         <CanvasProvider>
-          <Navbar/>
-          <Routes>
-            <Route path="/" element={<Requires><Home/></Requires>}/>
-            <Route path="/schedule" element={<Requires><Schedule/></Requires>}/>
-            <Route path="/memo" element={<></>}/>
-          </Routes>
-          <Live2dCanvas/>
+          <PopoutProvider>
+            <Navbar/>
+            <Routes>
+              <Route path="/" element={<Requires><Home/></Requires>}/>
+              <Route path="/schedule" element={<Requires><Schedule/></Requires>}/>
+              <Route path="/memo" element={<></>}/>
+            </Routes>
+            <Live2dCanvas/>
+          </PopoutProvider>
         </CanvasProvider>
       </LoginProvider>
     </Router>

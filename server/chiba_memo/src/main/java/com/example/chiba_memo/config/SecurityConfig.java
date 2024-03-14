@@ -4,6 +4,7 @@ import com.example.chiba_memo.controller.authorize.MyAuthFailureHandler;
 import com.example.chiba_memo.controller.authorize.MyAuthSuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,7 +29,6 @@ import java.io.IOException;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -40,18 +40,27 @@ public class SecurityConfig {
                         .anyRequest().permitAll()   // TODO: need to exclude main page than authenticate all
                 )
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/???")
+                        .loginPage("/")
                         .loginProcessingUrl("/api/auth/login")
                         .defaultSuccessUrl("/", true)
-                        .failureUrl("/???")
+                        .failureUrl("/")
                         .permitAll()
                         .successHandler(new MyAuthSuccessHandler())
                         .failureHandler(new MyAuthFailureHandler())
                 )
-                .rememberMe(rememberMe -> rememberMe.key("REMEMBER_ME_CHIBA"))
-                .logout(logout -> logout.logoutUrl("/logout").permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .permitAll()
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                )
+                .rememberMe(rememberMe -> rememberMe
+                        .key("REMEMBER_ME_CHIBA")
+                        .tokenValiditySeconds(30 * 24 * 60 * 60)
+                        .alwaysRemember(false)
+                )
                 .passwordManagement((management) -> management
-                        .changePasswordPage("/update-password")
+                        .changePasswordPage("/api/auth/update-password")
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)

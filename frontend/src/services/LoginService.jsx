@@ -15,12 +15,13 @@ export const register = async (username, password) => {
   }
 };
 
-export const login = async (username, password) => {
+export const login = async (username, password, isRemember) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/auth/login`, 
       qs.stringify({ // 使用qs库将对象序列化为URL编码的字符串
         username: username,
         password: password,
+        "remember-me": isRemember,
       }),
       {
         headers: {
@@ -33,6 +34,15 @@ export const login = async (username, password) => {
     return response.data;
   } catch (error) {
     console.log("登录失败:", error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
+export const logout = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/auth/logout`);
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };
